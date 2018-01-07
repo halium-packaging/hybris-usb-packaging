@@ -17,7 +17,7 @@ fi
 
 ANDROID_USB=/sys/class/android_usb/android0
 USB_FUNCTIONS=rndis
-LOCAL_IP=10.15.19.82
+LOCAL_IP=192.168.2.15
 
 write() {
     echo -n "$2" > "$1"
@@ -41,13 +41,13 @@ usb_info() {
 
 ip_setup() {
     if [ -n "$USB_IFACE" ]; then
-        ifconfig $USB_IFACE $LOCAL_IP
+        ip address add $LOCAL_IP dev $USB_IFACE
         return
     fi
     
-    ifconfig rndis0 $LOCAL_IP && USB_IFACE=rndis0
+    ip address add $LOCAL_IP dev rndis0 && USB_IFACE=rndis0
     if [ -z "$USB_IFACE" ]; then
-        ifconfig usb0 $LOCAL_IP && USB_IFACE=usb0
+        ip address add $LOCAL_IP dev usb0 && USB_IFACE=usb0
     fi
 
     if [ -z "$USB_IFACE" ]; then
